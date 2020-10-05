@@ -12,6 +12,9 @@ export default new Vuex.Store({
     FETCH_TRENDS(state, trends) {
       state.trends = trends;
     },
+    SEARCH_TRENDS(state, trends) {
+      state.trends = trends;
+    },
   },
   actions: {
     async fetch_trends({ commit }) {
@@ -19,6 +22,14 @@ export default new Vuex.Store({
         .get("/trends")
         .then((res) => {
           commit("FETCH_TRENDS", res.data);
+        })
+        .catch((e) => console.log(e));
+    },
+    async search_trends({ commit }, search) {
+      await axios()
+        .get("/search", { params: { word: search } })
+        .then((res) => {
+          commit("SEARCH_TRENDS", res.data);
         })
         .catch((e) => console.log(e));
     },

@@ -31,44 +31,19 @@
     </v-app-bar>
     <v-row>
       <v-col cols="4">
+        <h3>Search</h3>
         <form>
-          <h3>Search</h3>
           <v-text-field v-model="search" label="Word" solo></v-text-field>
+
+          <v-btn class="mr-4" v-on:click="searchWord">Search</v-btn>
         </form>
       </v-col>
       <v-col cols="8">
-        <v-simple-table>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">
-                  Time
-                </th>
-                <th class="text-left">
-                  Rank
-                </th>
-                <th class="text-left">
-                  Word
-                </th>
-                <th class="text-left">
-                  Tweet Count
-                </th>
-                <th class="text-left">
-                  City
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="trend in filterWord" v-bind:key="trend.id">
-                <td>{{ trend.now }}</td>
-                <td>{{ trend.rank }}</td>
-                <td>{{ trend.word }}</td>
-                <td>{{ trend.tweetcount }}</td>
-                <td>{{ trend.city }}</td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
+        <v-data-table
+          :headers="headers"
+          :items="trends"
+          class="elevation-1"
+        ></v-data-table>
       </v-col>
     </v-row>
   </div>
@@ -80,15 +55,25 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState(["trends"]),
-    filterWord() {
-      return this.trends.filter((v) => v["word"].match(this.search));
-    },
   },
   data() {
     return {
       trend: {},
+      headers: [
+        { text: "Time", value: "now" },
+        { text: "Rank", value: "rank" },
+        { text: "Word", value: "word" },
+        { text: "TweetCount", value: "tweetcount" },
+        { text: "City", value: "city" },
+      ],
       search: "",
     };
+  },
+  methods: {
+    searchWord() {
+      this.$store.dispatch("search_trends", this.search);
+      this.search = "";
+    },
   },
 };
 </script>
